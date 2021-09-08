@@ -10,11 +10,12 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>University.BL</RootNamespace>
     <AssemblyName>University.BL</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -53,6 +54,7 @@
   <ItemGroup>
     <Compile Include="Data\UniversityContext.cs" />
     <Compile Include="DTOs\CourseDTO.cs" />
+    <Compile Include="DTOs\DepartmentDTO.cs" />
     <Compile Include="DTOs\InstructorDTO.cs" />
     <Compile Include="DTOs\OfficeAssignmentsDTO.cs" />
     <Compile Include="DTOs\StudentDTO.cs" />

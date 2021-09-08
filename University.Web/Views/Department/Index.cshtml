@@ -1,0 +1,93 @@
+﻿@using PagedList.Mvc
+@model PagedList.IPagedList<University.BL.DTOs.DepartmentDTO>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Bienvenido al Index</h2>
+
+@Html.ActionLink("New", "Create", "Department", null, new { @class = "btn btn-sm btn-primary" })
+<hr />
+
+@using (Html.BeginForm("Index", "Department", FormMethod.Get))
+{
+    <p>
+        <select name="PageSize" id="PageSize" class="form-control">
+            <option @if ((int)ViewBag.PageSize == 10) { @Html.Raw("selected") }>10</option>
+            <option @if ((int)ViewBag.PageSize == 15) { @Html.Raw("selected") }>15</option>
+        </select>
+        <br />
+        <input type="submit" value="Apply" class="btn btn-primary" />
+    </p>
+}
+
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Budget</th>
+            <th>Start Date</th>
+            <th>Options</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.DepartmentID</td>
+                <td>@item.Name</td>
+                <td>@item.Budget</td>
+                <td>@item.StartDate</td>
+                <td>
+                    @Html.ActionLink("Instructor", "Index", "Department", new { DepartmentID = item.DepartmentID }, new { @class = "btn btn-sm btn-info" })
+                    @Html.ActionLink("Edit", "Edit", "Department", new { ID = item.DepartmentID }, new { @class = "btn btn-sm btn-primary" })
+                    @Html.ActionLink("Delete", "Delete", "Department", new { ID = item.DepartmentID }, new { @class = "btn btn-sm btn-primary" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+<br />
+Total Item Count @Model.TotalItemCount
+@Html.PagedListPager(Model, page => Url.Action("Index", "Department", new { page, pageSize = ViewBag.PageSize }))
+
+@if (ViewBag.Data != null && ViewBag.Message != null)
+{
+    <ul>
+        <li>@ViewBag.Data</li>
+        <li>@ViewBag.Message</li>
+    </ul>
+}
+
+
+@if (ViewBag.Instructor != null)
+{
+<h1>Instructor</h1>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>LastName </th>
+            <th>FirstMidName</th>
+            <th>HireDate</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in (List<University.BL.DTOs.InstructorDTO>)ViewBag.Instructor)
+        {
+        <tr>
+            <td>@item.ID</td>
+            <td>@item.LastName</td>
+            <td>@item.FirstMidName</td>
+            <td>@item.HireDate</td>
+        </tr>
+        }
+    </tbody>
+</table>
+}
