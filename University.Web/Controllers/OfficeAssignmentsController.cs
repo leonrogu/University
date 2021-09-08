@@ -126,11 +126,11 @@ namespace University.Web.Controllers
         [HttpGet]
         public ActionResult Delete(int id)
         {
-            if (!context.Enrollments.Any(x => x.InstructorID == id))
+            if (context.OfficeAssignments.Any(x => x.InstructorID == id))
             {
 
-                var studentModel = context.Students.FirstOrDefault(x => x.ID == id);
-                context.Students.Remove(studentModel);
+                var officeAssignmentsModel = context.OfficeAssignments.FirstOrDefault(x => x.InstructorID == id);
+                context.OfficeAssignments.Remove(officeAssignmentsModel);
                 context.SaveChanges();
 
             }
