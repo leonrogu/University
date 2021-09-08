@@ -13,6 +13,7 @@ namespace University.BL.Models
         [ForeignKey("Course")]
         public int CourseID { get; set; }
         [ForeignKey("Instructor")]
+        public int InstructorID { get; set; }
 
         //NAVS
         public Course Course { get; set; }

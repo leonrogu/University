@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using PagedList;
+using System;
+using System.Linq;
 using System.Web.Mvc;
 using University.BL.Data;
 using University.BL.DTOs;
@@ -9,7 +11,7 @@ namespace University.Web.Controllers
     {
         private readonly UniversityContext context = new UniversityContext();
         // GET: OfficeAssignments
-        public ActionResult Index()
+        public ActionResult Index(int? pageSize, int? page)
         {
             // SELECT * FROM OfficeAssigment
             var query = context.OfficeAssignments.Include("Instructor").ToList();
@@ -25,7 +27,13 @@ namespace University.Web.Controllers
 
             });
 
-            return View(offices);
+            #region Paginacion
+            pageSize = (pageSize ?? 10);
+            page = (page ?? 1);
+            ViewBag.PageSize = pageSize;
+            #endregion
+
+            return View(offices.ToPagedList(page.Value, pageSize.Value));
         }
         [HttpGet]
         public ActionResult Create()
@@ -67,6 +75,67 @@ namespace University.Web.Controllers
             //value - text
             ViewData["Instructors"] = new SelectList(Instructors, "ID", "FullName");
 
+        }
+
+        [HttpGet]
+        public ActionResult Edit(int id)
+        {
+
+            var OfficeAssignment = context.OfficeAssignments.Where(x => x.InstructorID == id)
+                             .Select(x => new OfficeAssignmentsDTO
+                             {
+                                 InstructorID = x.InstructorID,
+                                 Location = x.Location
+                             }).FirstOrDefault();
+
+
+            return View(OfficeAssignment);
+        }
+   
+        [HttpPost]
+        public ActionResult Edit(OfficeAssignmentsDTO officeAssignment)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return View(officeAssignment);
+
+                //var studentModel = context.Students.Where(x => x.ID == student.ID).Select(x => x).FirstOrDefault();
+                var officeAssignmentsModel = context.OfficeAssignments.FirstOrDefault(x => x.InstructorID == officeAssignment.InstructorID);
+
+                //CAMPOS QUE SE VAN A MODIFICAR
+                //SE SOBRESCRIBE LAS PROPIEDADES DEL MOELO DE LA BD
+                officeAssignmentsModel.InstructorID = officeAssignment.InstructorID;
+                officeAssignmentsModel.Location = officeAssignment.Location;
+
+                //UPDATE Student SET LastName = @LastName, FirstMidName = @FirstMidName, EnrollmentDate = @EnrollmentDate WHERE ID = @ID;
+
+                //AQUÍ SE APLICAN LOS CAMBIOS EN LA BD
+                context.SaveChanges();
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
+
+            return View(officeAssignment);
+        }
+
+        [HttpGet]
+        public ActionResult Delete(int id)
+        {
+            if (!context.Enrollments.Any(x => x.InstructorID == id))
+            {
+
+                var studentModel = context.Students.FirstOrDefault(x => x.ID == id);
+                context.Students.Remove(studentModel);
+                context.SaveChanges();
+
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }

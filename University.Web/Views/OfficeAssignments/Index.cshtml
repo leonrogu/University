@@ -1,4 +1,5 @@
-﻿@model IEnumerable<University.BL.DTOs.OfficeAssignmentsDTO>
+﻿@using PagedList.Mvc
+@model PagedList.IPagedList<University.BL.DTOs.OfficeAssignmentsDTO>
 
 @{
     ViewBag.Title = "Index";
@@ -6,28 +7,50 @@
 
 <h2>Index</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Instructor.FullName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Location)
-        </th>
-    </tr>
+@Html.ActionLink("New", "Create", "OfficeAssignments", null, new { @class = "btn btn-sm btn-primary" })
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Instructor.FullName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Location)
-        </td>
-    </tr>
+@using (Html.BeginForm("Index", "OfficeAssignments", FormMethod.Get))
+{
+    <p>
+        <select name="PageSize" id="PageSize" class="form-control">
+            <option @if ((int)ViewBag.PageSize == 10) { @Html.Raw("selected") }>10</option>
+            <option @if ((int)ViewBag.PageSize == 15) { @Html.Raw("selected") }>15</option>
+        </select>
+        <br />
+        <input type="submit" value="Apply" class="btn btn-primary" />
+    </p>
 }
 
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>InstructorID</th>
+            <th>Location</th>
+            <th>Opciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Instructor.FullName</td>
+                <td>@item.Location</td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", "OfficeAssignments", new { ID = item.InstructorID }, new { @class = "btn btn-sm btn-primary" })
+                    @Html.ActionLink("Delete", "Delete", "OfficeAssignments", new { ID = item.InstructorID }, new { @class = "btn btn-sm btn-primary" })
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+<br />
+Total Item Count @Model.TotalItemCount
+@Html.PagedListPager(Model, page => Url.Action("Index", "OfficeAssignment", new { page, pageSize = ViewBag.PageSize }))
+
+
+
+
+
+
