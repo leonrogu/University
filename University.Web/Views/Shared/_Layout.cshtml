@@ -36,10 +36,12 @@
                 @Html.ActionLink("Students", "Index", "Students", null, new { @class = "list-group-item list-group-item-action bg-light" })
                 @Html.ActionLink("Course", "Index", "Course", null, new { @class = "list-group-item list-group-item-action bg-light" })
                 @Html.ActionLink("OfficeAssignments", "Index", "OfficeAssignments", null, new { @class = "list-group-item list-group-item-action bg-light" })
+                @Html.ActionLink("Department", "Index", "Department", null, new { @class = "list-group-item list-group-item-action bg-light" })
+                @Html.ActionLink("Instructor", "Index", "Instructor", null, new { @class = "list-group-item list-group-item-action bg-light" })
 
                 @if (Request.IsAuthenticated)
                 {
-                    
+
                 }
                 else
                 {
